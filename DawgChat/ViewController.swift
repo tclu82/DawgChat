@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class ViewController: UITableViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Logout button upper left
@@ -19,11 +19,25 @@ class ViewController: UITableViewController {
                                                            target: self,
                                                            action: #selector(logoutHandler))
         
+        // user is not logged in
+        if FIRAuth.auth()?.currentUser?.uid == nil
+        {
+            // Perform logoutHandler after 0 sec
+            perform(#selector(logoutHandler), with: nil, afterDelay: 0)
+        }
         
     }
     
     @objc private func logoutHandler()
-    {   // Go back to LoginController
+    {
+        do {
+            try FIRAuth.auth()?.signOut()
+        }
+        catch let logoutErr {
+            print(logoutErr)
+        }
+
+        // Go back to LoginController
         let loginController = LoginController()
         present(loginController, animated: true, completion: nil)
     }
