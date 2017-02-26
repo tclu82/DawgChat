@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginController: UIViewController {
     
@@ -30,8 +31,52 @@ class LoginController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
+        
         return button
     }()
+    
+    @objc private func handleRegister()
+    {   // guard catch the wrong email input
+        guard let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text else
+        {
+            print("Form is not valid")
+            return
+        }
+        
+        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, err) in
+            
+            if err != nil
+            {
+                print(err!)
+                return
+            }
+            
+            guard let uid = user?.uid else
+            {
+                return
+            }
+            
+            // User authenticated successfully
+            let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
+            // Create child node reference for each new account
+            // Assign user id in Firebase
+            let userReference = ref.child("users").child(uid)
+            let values = ["name": name, "email": email]
+            userReference.updateChildValues(values, withCompletionBlock: { (error, ref) in
+                
+                if error != nil
+                {
+                    print(error!)
+                    return
+                }
+                
+                print("User is saved to Firebase database successfully")
+            })
+            
+        })
+    }
     
     // Textfields for user name input
     let nameTextField: UITextField = {
@@ -147,6 +192,13 @@ class LoginController: UIViewController {
     
     private func setupUserInputTextField()
     {
+        setupNameTextField()
+        setupEmailTextField()
+        setupPasswordTextField()
+    }
+  
+    private func setupNameTextField()
+    {
         // x, y, width, height constraints
         nameTextField.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor, constant: 12).isActive = true
         nameTextField.topAnchor.constraint(equalTo: inputContainerView.topAnchor).isActive = true
@@ -158,7 +210,10 @@ class LoginController: UIViewController {
         nameSeparatorView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive = true
         nameSeparatorView.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
         nameSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
+    }
+    
+    private func setupEmailTextField()
+    {
         // x, y, width, height constraints
         emailTextField.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor, constant: 12).isActive = true
         emailTextField.topAnchor.constraint(equalTo: nameSeparatorView.bottomAnchor).isActive = true
@@ -170,22 +225,16 @@ class LoginController: UIViewController {
         emailSeparatorView.topAnchor.constraint(equalTo: emailTextField.bottomAnchor).isActive = true
         emailSeparatorView.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
         emailSeparatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
+    }
+    
+    private func setupPasswordTextField()
+    {
         // x, y, width, height constraints
-//        passwordTextField.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor, constant: 12).isActive = true
-        
         passwordTextField.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor, constant: 12).isActive = true
-        
         passwordTextField.topAnchor.constraint(equalTo: emailSeparatorView.bottomAnchor).isActive = true
         passwordTextField.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
         passwordTextField.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3).isActive = true
     }
-    
-    private func setupTextField()
-    {
-        
-    }
-    
     
     
     override var preferredStatusBarStyle: UIStatusBarStyle
