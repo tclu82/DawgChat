@@ -54,7 +54,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     ///
     /// - Parameter picker: <#picker description#>
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-//        print("cancel")
         dismiss(animated: true, completion: nil)
     }
     

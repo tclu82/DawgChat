@@ -14,11 +14,8 @@
 		1128D1401E6214B500B4EE29 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1128D13E1E6214B500B4EE29 /* LaunchScreen.storyboard */; };
 		1128D1491E62175F00B4EE29 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1128D1481E62175F00B4EE29 /* LoginController.swift */; };
 		1128D14B1E6287ED00B4EE29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1128D14A1E6287ED00B4EE29 /* GoogleService-Info.plist */; };
-<<<<<<< HEAD
+		112D73191E64CBE500DC3F70 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112D73181E64CBE500DC3F70 /* Extensions.swift */; };
 		1181FD5F1E6404A600762FD1 /* LoginController_Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1181FD5E1E6404A600762FD1 /* LoginController_Handler.swift */; };
-=======
-		1181FD5D1E63ED0900762FD1 /* LoginController_Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */; };
->>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 		118F2CFC1E63BC2C004D06A7 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118F2CFB1E63BC2C004D06A7 /* NewMessageController.swift */; };
 		118F2CFF1E63CBDD004D06A7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118F2CFE1E63CBDD004D06A7 /* User.swift */; };
 		CBF611581469B61A950CC46A /* Pods_DawgChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DEA971CC7126E46D79B59AA /* Pods_DawgChat.framework */; };
@@ -34,11 +31,8 @@
 		1128D1411E6214B500B4EE29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1128D1481E62175F00B4EE29 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		1128D14A1E6287ED00B4EE29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-<<<<<<< HEAD
+		112D73181E64CBE500DC3F70 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1181FD5E1E6404A600762FD1 /* LoginController_Handler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController_Handler.swift; sourceTree = "<group>"; };
-=======
-		1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController_Handlers.swift; sourceTree = "<group>"; };
->>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 		118F2CFB1E63BC2C004D06A7 /* NewMessageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		118F2CFE1E63CBDD004D06A7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4DEA971CC7126E46D79B59AA /* Pods_DawgChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DawgChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +73,7 @@
 		1128D1341E6214B500B4EE29 /* DawgChat */ = {
 			isa = PBXGroup;
 			children = (
+				112D73171E64CBD300DC3F70 /* Helper */,
 				118F2CFD1E63CBC7004D06A7 /* Model */,
 				1128D1471E62173C00B4EE29 /* Controller */,
 				1128D1351E6214B500B4EE29 /* AppDelegate.swift */,
@@ -97,13 +92,17 @@
 				1128D1481E62175F00B4EE29 /* LoginController.swift */,
 				1128D1371E6214B500B4EE29 /* MessageController.swift */,
 				118F2CFB1E63BC2C004D06A7 /* NewMessageController.swift */,
-<<<<<<< HEAD
 				1181FD5E1E6404A600762FD1 /* LoginController_Handler.swift */,
-=======
-				1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */,
->>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 			);
 			name = Controller;
+			sourceTree = "<group>";
+		};
+		112D73171E64CBD300DC3F70 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				112D73181E64CBE500DC3F70 /* Extensions.swift */,
+			);
+			name = Helper;
 			sourceTree = "<group>";
 		};
 		118F2CFD1E63CBC7004D06A7 /* Model */ = {
@@ -261,8 +260,8 @@
 				1128D1381E6214B500B4EE29 /* MessageController.swift in Sources */,
 				1128D1491E62175F00B4EE29 /* LoginController.swift in Sources */,
 				118F2CFF1E63CBDD004D06A7 /* User.swift in Sources */,
-				1181FD5D1E63ED0900762FD1 /* LoginController_Handlers.swift in Sources */,
 				1128D1361E6214B500B4EE29 /* AppDelegate.swift in Sources */,
+				112D73191E64CBE500DC3F70 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
