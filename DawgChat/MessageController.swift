@@ -61,7 +61,7 @@ class MessageController: UITableViewController {
     }
 
     /// Handle logout
-    @objc private func logoutHandler()
+    func logoutHandler()
     {
         do {
             try FIRAuth.auth()?.signOut()

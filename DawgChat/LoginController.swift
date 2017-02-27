@@ -24,7 +24,7 @@ class LoginController: UIViewController {
     }()
     
     // An login button
-    let loginRegisterButton: UIButton = {
+    lazy var  loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
         // Gold color
         button.backgroundColor = UIColor(r:240, g:215, b: 0)
@@ -38,7 +38,7 @@ class LoginController: UIViewController {
     }()
     
     /// Handle login or register
-    @objc private func handleLoginOrRegister()
+    func handleLoginOrRegister()
     {   // login is selected
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0
         {
@@ -72,46 +72,7 @@ class LoginController: UIViewController {
         })
     }
     
-    /// Handle register
-    private func handleRegister()
-    {   // guard catch the email user input
-        guard let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text else
-        {
-            print("Form is not valid")
-            return
-        }
         
-        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, err) in
-            
-            if err != nil
-            {
-                print(err!)
-                return
-            }
-            
-            guard let uid = user?.uid else
-            {
-                return
-            }
-            // User authenticated successfully
-            let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
-            
-            // Create child node reference for each new account, assign user id in Firebase
-            let userReference = ref.child("users").child(uid)
-            let values = ["name": name, "email": email]
-            userReference.updateChildValues(values, withCompletionBlock: { (error, ref) in
-                
-                if error != nil
-                {
-                    print(error!)
-                    return
-                }
-                print("User is saved to Firebase database successfully")
-                self.dismiss(animated: true, completion: nil)
-            })
-        })
-    }
-    
     // Textfields for user name input
     let nameTextField: UITextField = {
         let tf = UITextField()
@@ -154,17 +115,21 @@ class LoginController: UIViewController {
     }()
     
     // Login image
-    let profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "dawg3")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         // Change fill style
         imageView.contentMode = .scaleAspectFill
+        // Triggle when touch profile image
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+        // Default false
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
     // Toggle button for switch between Login / Register
-    let loginRegisterSegmentedControl: UISegmentedControl = {
+    lazy var  loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])
         sc.translatesAutoresizingMaskIntoConstraints = false
         // Set up the tint color, gold
@@ -176,7 +141,7 @@ class LoginController: UIViewController {
     }()
     
     /// Handle the inputContainerView size change when switch between login and register
-    @objc private func handleLoginRegisterChange()
+    func handleLoginRegisterChange()
     {   // Get title from selected toggle button name
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         loginRegisterButton.setTitle(title, for: .normal)

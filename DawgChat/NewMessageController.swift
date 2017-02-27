@@ -33,9 +33,11 @@ class NewMessageController: UITableViewController {
             
             if let dictionary = snapshot.value as? [String: Any] {
                 let user = User()
+        
 //                user.setValuesForKeys(dictionary)
                 user.name = dictionary["name"] as! String?
                 user.email = dictionary["email"] as! String?
+                user.profileImageUrl = dictionary["profileImageUrl"] as! String?
 //                print(user.name, user.email)
                 
                 // put user into user array
@@ -54,7 +56,7 @@ class NewMessageController: UITableViewController {
     }
     
     /// Handle cancel and jump back to the caller
-    @objc private func cancelHandler()
+    func cancelHandler()
     {
         dismiss(animated: true, completion: nil)
     }
