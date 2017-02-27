@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 
+/// This class handles login
 class LoginController: UIViewController {
     
     // An input container for user credential
@@ -32,22 +33,25 @@ class LoginController: UIViewController {
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         // Determine login or register
-        button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleLoginOrRegister), for: .touchUpInside)
         return button
     }()
     
-    @objc private func handleLoginRegister()
-    {
+    /// Handle login or register
+    @objc private func handleLoginOrRegister()
+    {   // login is selected
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0
         {
             handleLogin()
         }
+        // register is selected
         else
         {
             handleRegister()
         }
     }
     
+    /// Handle login
     private func handleLogin()
     {
         // guard catch the wrong email input
@@ -56,8 +60,8 @@ class LoginController: UIViewController {
             print("Form is not valid")
             return
         }
-        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, err) in
-            
+        FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, err) in
+       
             if err != nil
             {
                 print(err!)
@@ -68,7 +72,8 @@ class LoginController: UIViewController {
         })
     }
     
-    @objc private func handleRegister()
+    /// Handle register
+    private func handleRegister()
     {   // guard catch the email user input
         guard let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text else
         {
@@ -88,7 +93,6 @@ class LoginController: UIViewController {
             {
                 return
             }
-            
             // User authenticated successfully
             let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
             
@@ -102,7 +106,6 @@ class LoginController: UIViewController {
                     print(error!)
                     return
                 }
-                
                 print("User is saved to Firebase database successfully")
                 self.dismiss(animated: true, completion: nil)
             })
@@ -172,6 +175,7 @@ class LoginController: UIViewController {
         return sc
     }()
     
+    /// Handle the inputContainerView size change when switch between login and register
     @objc private func handleLoginRegisterChange()
     {   // Get title from selected toggle button name
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
@@ -204,6 +208,7 @@ class LoginController: UIViewController {
         passwordTextFieldHeightAnchor?.isActive = true
     }
     
+    /// Call super init
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -222,6 +227,7 @@ class LoginController: UIViewController {
         
     }
     
+    /// Status bar style
     override var preferredStatusBarStyle: UIStatusBarStyle
     {
         return .lightContent
@@ -233,6 +239,7 @@ class LoginController: UIViewController {
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
+    /// Helper method for inputContainView
     private func setupInputContainerView()
     {
         // x, y, width, height constraints
@@ -342,6 +349,7 @@ class LoginController: UIViewController {
     }
 }
 
+// MARK: - helper class for UIColor
 extension UIColor
 {
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat)
