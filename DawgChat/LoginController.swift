@@ -32,16 +32,17 @@ class LoginController: UIViewController {
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         // Determine login or register
-        button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleLoginOrRegister), for: .touchUpInside)
         return button
     }()
     
-    @objc private func handleLoginRegister()
-    {
+    @objc private func handleLoginOrRegister()
+    {   // login is selected
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0
         {
             handleLogin()
         }
+        // register is selected
         else
         {
             handleRegister()
@@ -56,8 +57,8 @@ class LoginController: UIViewController {
             print("Form is not valid")
             return
         }
-        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, err) in
-            
+        FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, err) in
+       
             if err != nil
             {
                 print(err!)
@@ -68,7 +69,7 @@ class LoginController: UIViewController {
         })
     }
     
-    @objc private func handleRegister()
+    private func handleRegister()
     {   // guard catch the email user input
         guard let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text else
         {
@@ -88,7 +89,6 @@ class LoginController: UIViewController {
             {
                 return
             }
-            
             // User authenticated successfully
             let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
             
@@ -102,7 +102,6 @@ class LoginController: UIViewController {
                     print(error!)
                     return
                 }
-                
                 print("User is saved to Firebase database successfully")
                 self.dismiss(animated: true, completion: nil)
             })
