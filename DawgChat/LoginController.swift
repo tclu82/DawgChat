@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 
+/// This class handles login
 class LoginController: UIViewController {
     
     // An input container for user credential
@@ -36,6 +37,7 @@ class LoginController: UIViewController {
         return button
     }()
     
+    /// Handle login or register
     @objc private func handleLoginOrRegister()
     {   // login is selected
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0
@@ -49,6 +51,7 @@ class LoginController: UIViewController {
         }
     }
     
+    /// Handle login
     private func handleLogin()
     {
         // guard catch the wrong email input
@@ -69,6 +72,7 @@ class LoginController: UIViewController {
         })
     }
     
+    /// Handle register
     private func handleRegister()
     {   // guard catch the email user input
         guard let name = nameTextField.text, let email = emailTextField.text, let password = passwordTextField.text else
@@ -171,6 +175,7 @@ class LoginController: UIViewController {
         return sc
     }()
     
+    /// Handle the inputContainerView size change when switch between login and register
     @objc private func handleLoginRegisterChange()
     {   // Get title from selected toggle button name
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
@@ -203,6 +208,7 @@ class LoginController: UIViewController {
         passwordTextFieldHeightAnchor?.isActive = true
     }
     
+    /// Call super init
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -221,6 +227,7 @@ class LoginController: UIViewController {
         
     }
     
+    /// Status bar style
     override var preferredStatusBarStyle: UIStatusBarStyle
     {
         return .lightContent
@@ -232,6 +239,7 @@ class LoginController: UIViewController {
     var emailTextFieldHeightAnchor: NSLayoutConstraint?
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
+    /// Helper method for inputContainView
     private func setupInputContainerView()
     {
         // x, y, width, height constraints
@@ -341,6 +349,7 @@ class LoginController: UIViewController {
     }
 }
 
+// MARK: - helper class for UIColor
 extension UIColor
 {
     convenience init(r: CGFloat, g: CGFloat, b: CGFloat)
