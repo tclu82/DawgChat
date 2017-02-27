@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Create new frame instead of storyboard
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = UINavigationController(rootViewController: MessageController())
+        window?.rootViewController = UINavigationController(rootViewController: MessagesController())
         return true
     }
 

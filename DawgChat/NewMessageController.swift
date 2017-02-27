@@ -27,7 +27,7 @@ class NewMessageController: UITableViewController {
     }
     
     /// Fetch user from Firebase db
-    private func fetchUser()
+    func fetchUser()
     {
         FIRDatabase.database().reference().child("users").observe(.childAdded, with: { (snapshot) in
             
@@ -54,7 +54,7 @@ class NewMessageController: UITableViewController {
     }
     
     /// Handle cancel and jump back to the caller
-    @objc private func cancelHandler()
+    internal func cancelHandler()
     {
         dismiss(animated: true, completion: nil)
     }
