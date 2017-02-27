@@ -57,11 +57,7 @@ class NewMessageController: UITableViewController {
     
     /// Handle cancel and jump back to the caller
 <<<<<<< HEAD
-<<<<<<< HEAD
     func cancelHandler()
-=======
-    internal func cancelHandler()
->>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
     internal func cancelHandler()
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
