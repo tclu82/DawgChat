@@ -118,10 +118,16 @@ class MessagesController: UITableViewController {
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     /// Handle logout
     func logoutHandler()
     {
+=======
+    
+    func handleLogout() {
+        
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
     
     func handleLogout() {

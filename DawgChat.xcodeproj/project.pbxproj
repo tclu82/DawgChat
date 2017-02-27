@@ -15,7 +15,11 @@
 		1128D1491E62175F00B4EE29 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1128D1481E62175F00B4EE29 /* LoginController.swift */; };
 		1128D14B1E6287ED00B4EE29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1128D14A1E6287ED00B4EE29 /* GoogleService-Info.plist */; };
 <<<<<<< HEAD
+<<<<<<< HEAD
 		1181FD5F1E6404A600762FD1 /* LoginController_Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1181FD5E1E6404A600762FD1 /* LoginController_Handler.swift */; };
+=======
+		1181FD5D1E63ED0900762FD1 /* LoginController_Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */; };
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
 		1181FD5D1E63ED0900762FD1 /* LoginController_Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */; };
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
@@ -35,7 +39,11 @@
 		1128D1481E62175F00B4EE29 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		1128D14A1E6287ED00B4EE29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 <<<<<<< HEAD
+<<<<<<< HEAD
 		1181FD5E1E6404A600762FD1 /* LoginController_Handler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController_Handler.swift; sourceTree = "<group>"; };
+=======
+		1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController_Handlers.swift; sourceTree = "<group>"; };
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
 		1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController_Handlers.swift; sourceTree = "<group>"; };
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
@@ -98,7 +106,11 @@
 				1128D1371E6214B500B4EE29 /* MessageController.swift */,
 				118F2CFB1E63BC2C004D06A7 /* NewMessageController.swift */,
 <<<<<<< HEAD
+<<<<<<< HEAD
 				1181FD5E1E6404A600762FD1 /* LoginController_Handler.swift */,
+=======
+				1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */,
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
 				1181FD5C1E63ED0900762FD1 /* LoginController_Handlers.swift */,
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c

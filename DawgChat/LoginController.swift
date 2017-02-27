@@ -31,8 +31,12 @@ class LoginController: UIViewController {
     }()
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     // An login button
     lazy var  loginRegisterButton: UIButton = {
+=======
+    lazy var loginRegisterButton: UIButton = {
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
     lazy var loginRegisterButton: UIButton = {
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
@@ -47,11 +51,16 @@ class LoginController: UIViewController {
     }()
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     /// Handle login or register
     func handleLoginOrRegister()
     {   // login is selected
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0
         {
+=======
+    func handleLoginRegister() {
+        if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
     func handleLoginRegister() {
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
@@ -78,8 +87,11 @@ class LoginController: UIViewController {
     }
     
 <<<<<<< HEAD
+<<<<<<< HEAD
         
     // Textfields for user name input
+=======
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
     let nameTextField: UITextField = {
@@ -119,7 +131,10 @@ class LoginController: UIViewController {
     }()
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     // Login image
+=======
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
     lazy var profileImageView: UIImageView = {
@@ -128,9 +143,14 @@ class LoginController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
 <<<<<<< HEAD
+<<<<<<< HEAD
         // Triggle when touch profile image
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
         // Default false
+=======
+        
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
         
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
@@ -140,8 +160,12 @@ class LoginController: UIViewController {
     }()
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     // Toggle button for switch between Login / Register
     lazy var  loginRegisterSegmentedControl: UISegmentedControl = {
+=======
+    lazy var loginRegisterSegmentedControl: UISegmentedControl = {
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
     lazy var loginRegisterSegmentedControl: UISegmentedControl = {
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
@@ -154,9 +178,13 @@ class LoginController: UIViewController {
     }()
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     /// Handle the inputContainerView size change when switch between login and register
     func handleLoginRegisterChange()
     {   // Get title from selected toggle button name
+=======
+    func handleLoginRegisterChange() {
+>>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
 =======
     func handleLoginRegisterChange() {
 >>>>>>> a140ba4d2f22259f597849c8c0a82aed3cb8180c
