@@ -85,6 +85,32 @@ class NewMessageController: UITableViewController {
         let user = users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
+        
+        
+//        cell.imageView?.image = UIImage(named: "cat")
+        
+        // Use image from Firebase for user profile display
+        if let profileImageUrl = user.profileImageUrl
+        {
+            let url = NSURL(string: profileImageUrl)
+            URLSession.shared.dataTask(with: url as! URL, completionHandler: { (data, response, err) in
+                
+                // Download failed!
+                if err != nil
+                {
+                    print(err!)
+                    return
+                }
+                DispatchQueue.main.async {
+                    cell.imageView?.image = UIImage(data: data!)
+                }
+              
+            }).resume()
+        }
+        
+        
+        
+        
         return cell
     }
 }
