@@ -38,7 +38,7 @@ class NewMessageController: UITableViewController {
                 user.name = dictionary["name"] as! String?
                 user.email = dictionary["email"] as! String?
                 user.profileImageUrl = dictionary["profileImageUrl"] as! String?
-
+                
                 // put user into user array
                 self.users.append(user)
      
@@ -72,8 +72,10 @@ class NewMessageController: UITableViewController {
     ///   - tableView: <#tableView description#>
     ///   - indexPath: <#indexPath description#>
     /// - Returns: <#return value description#>
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
+    override func tableView(_ tableView: UITableView,
+                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
+                                                 for: indexPath) as! UserCell
         let user = users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
@@ -106,6 +108,7 @@ class UserCell: UITableViewCell {
     // A property for customize profile image view
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
+//        imageView.image = UIImage(named: "cat")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         // Radius = height / 2
         imageView.layer.cornerRadius = 25
@@ -113,6 +116,7 @@ class UserCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
+    
     
     /// This func set profileImageView anchors
     ///
@@ -128,6 +132,7 @@ class UserCell: UITableViewCell {
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
     }
     
     /// Set text label and detail text label layout

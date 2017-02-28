@@ -54,7 +54,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     ///
     /// - Parameter picker: <#picker description#>
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-//        print("cancel")
         dismiss(animated: true, completion: nil)
     }
     
@@ -87,9 +86,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             // Stores image inside "profile_images" with imageName (UUID)
             let storageRef = FIRStorage.storage().reference().child("profile_images")
                 .child("\(imageName).jpg")   // .jpg for UIImagePNGRepresentation // .png for UIImagePNGRepresentation
-            
-//            // Generate binary data from png (huge)
-//            if let uploadData = UIImagePNGRepresentation(self.profileImageView.image!) {
             
             // Use JPEG and set comppression quality to 0.1
             if let profileImage = self.profileImageView.image, let uploadData = UIImageJPEGRepresentation(profileImage, 0.1)
@@ -132,7 +128,6 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             }
             print("User is saved to Firebase database successfully")
             
-            // Set title for current login user
             let user = User()
             // Will crash if keys don't match
             user.setValuesForKeys(values)

@@ -11,6 +11,7 @@ import UIKit
 /// This cache stores images downloaded from Firebase
 let imageCache = NSCache<AnyObject, AnyObject>()
 
+
 // MARK: - This class extended from UIImageView handles downloaded image caches
 extension UIImageView {
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11239B5E1E6548D50022264F /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11239B5D1E6548D50022264F /* ChatLogController.swift */; };
 		1128D1361E6214B500B4EE29 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1128D1351E6214B500B4EE29 /* AppDelegate.swift */; };
 		1128D1381E6214B500B4EE29 /* MessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1128D1371E6214B500B4EE29 /* MessageController.swift */; };
 		1128D13B1E6214B500B4EE29 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1128D1391E6214B500B4EE29 /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11239B5D1E6548D50022264F /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		1128D1321E6214B500B4EE29 /* DawgChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DawgChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1128D1351E6214B500B4EE29 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1128D1371E6214B500B4EE29 /* MessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageController.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				1128D1371E6214B500B4EE29 /* MessageController.swift */,
 				118F2CFB1E63BC2C004D06A7 /* NewMessageController.swift */,
 				1181FD5E1E6404A600762FD1 /* LoginController_Handler.swift */,
+				11239B5D1E6548D50022264F /* ChatLogController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11239B5E1E6548D50022264F /* ChatLogController.swift in Sources */,
 				1181FD5F1E6404A600762FD1 /* LoginController_Handler.swift in Sources */,
 				118F2CFC1E63BC2C004D06A7 /* NewMessageController.swift in Sources */,
 				1128D1381E6214B500B4EE29 /* MessageController.swift in Sources */,

@@ -193,7 +193,6 @@ class LoginController: UIViewController {
         setupLoginRegisterButton()
         setupProfileImageView()
         setupLoginRegisterSegmentedControl()
-        
     }
     
     /// Status bar style
