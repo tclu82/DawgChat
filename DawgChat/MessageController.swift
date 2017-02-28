@@ -76,6 +76,9 @@ class MessageController: UITableViewController {
         }, withCancel: nil)
     }
     
+    /// Setup text label to fit in Navigation Bar
+    ///
+    /// - Parameter user: user description
     func setupNavBarWithUser(user: User)
     {
         let titleView = UIView()

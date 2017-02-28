@@ -163,7 +163,6 @@ class UserCell: UITableViewCell {
         
     }
     
-    
     /// Set text label and detail text label layout
     override func layoutSubviews() {
         super.layoutSubviews()
