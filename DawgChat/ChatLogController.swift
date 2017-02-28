@@ -50,7 +50,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
         
-        
         containerView.addSubview(sendButton)
         // Add x, y, width and height constraint anchors
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
@@ -98,6 +97,10 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
 //        print(inputTextField.text!)
     }
     
+    /// Send messge with enter key
+    ///
+    /// - Parameter textField: <#textField description#>
+    /// - Returns: <#return value description#>
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         handleSend()
