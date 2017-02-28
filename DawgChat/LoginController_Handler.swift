@@ -54,6 +54,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     ///
     /// - Parameter picker: <#picker description#>
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//        print("cancel")
         dismiss(animated: true, completion: nil)
     }
     
@@ -85,11 +86,16 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             let imageName = NSUUID().uuidString
             // Stores image inside "profile_images" with imageName (UUID)
             let storageRef = FIRStorage.storage().reference().child("profile_images")
-                .child("\(imageName).png")
-            // Upload image data
-            if let uploadData = UIImagePNGRepresentation(self.profileImageView.image!) {
+                .child("\(imageName).jpg")   // .jpg for UIImagePNGRepresentation // .png for UIImagePNGRepresentation
+            
+//            // Generate binary data from png (huge)
+//            if let uploadData = UIImagePNGRepresentation(self.profileImageView.image!) {
+            
+            // Use JPEG and set comppression quality to 0.1
+            if let profileImage = self.profileImageView.image, let uploadData = UIImageJPEGRepresentation(profileImage, 0.1)
+            {
                 storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
-                    
+            
                     if error != nil {
                         print(error!)
                         return
@@ -98,7 +104,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     if let profileImageUrl = metadata?.downloadURL()?.absoluteString {
                         let values = ["name": name, "email": email,
                                       "profileImageUrl": profileImageUrl]
-                        self.registerUserInfoDatabaseWithUID(uid: uid, values: values)
+                        self.registerUserIntoDatabaseWithUID(uid: uid, values: values)
                     }
                 })
             }
@@ -108,9 +114,9 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     /// Register name, email, image to Firebase
     ///
     /// - Parameters:
-    ///   - uid: <#uid description#>
-    ///   - values: <#values description#>
-    private func registerUserInfoDatabaseWithUID(uid: String, values: [String: Any])
+    ///   - uid: uid description
+    ///   - values: values description
+    private func registerUserIntoDatabaseWithUID(uid: String, values: [String: Any])
     {
         let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
         
@@ -125,6 +131,12 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 return
             }
             print("User is saved to Firebase database successfully")
+            
+            // Set title for current login user
+            let user = User()
+            // Will crash if keys don't match
+            user.setValuesForKeys(values)
+            self.messageController?.setupNavBarWithUser(user: user)
             self.dismiss(animated: true, completion: nil)
         })
     }

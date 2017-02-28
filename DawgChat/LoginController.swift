@@ -12,6 +12,8 @@ import Firebase
 /// This class handles login
 class LoginController: UIViewController {
     
+    var messageController: MessageController?
+    
     // An input container for user credential
     let inputContainerView: UIView = {
         let view = UIView()
@@ -68,10 +70,12 @@ class LoginController: UIViewController {
                 return
             }
             // Successfully login
+            
+            // Fetch current user and set its name to NavBarTitle
+            self.messageController?.fetchUserAndSetupNavBarTitle()
             self.dismiss(animated: true, completion: nil)
         })
     }
-    
         
     // Textfields for user name input
     let nameTextField: UITextField = {

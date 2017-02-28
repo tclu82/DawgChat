@@ -38,7 +38,7 @@ class NewMessageController: UITableViewController {
                 user.name = dictionary["name"] as! String?
                 user.email = dictionary["email"] as! String?
                 user.profileImageUrl = dictionary["profileImageUrl"] as! String?
-                
+
                 // put user into user array
                 self.users.append(user)
      
@@ -77,7 +77,7 @@ class NewMessageController: UITableViewController {
         let user = users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
-        
+
         // Use image from Firebase for user profile display
         if let profileImageUrl = user.profileImageUrl
         {
@@ -128,9 +128,7 @@ class UserCell: UITableViewCell {
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
     }
-    
     
     /// Set text label and detail text label layout
     override func layoutSubviews() {
