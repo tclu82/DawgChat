@@ -104,7 +104,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         let date = NSDate()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM dd yyyy HH:mm:a"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC") as TimeZone!
+        dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
         let timeStamp = dateFormatter.string(from: date as Date)
         
         let values = ["text": inputTextField.text!, "toID": toID, "FromID": fromID,
