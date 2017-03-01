@@ -21,10 +21,15 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         return input
     }()
     
+    /// Chat with this user, and set its name to Navigation tile
+    var user: User? {
+        didSet { navigationItem.title = user?.name }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "Chat log"
+//        navigationItem.title = "Chat log"
         collectionView?.backgroundColor = UIColor.white
         setupInputComponents()
     }
@@ -91,7 +96,19 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
     {
         let ref = FIRDatabase.database().reference().child("messages")
         let childRef = ref.childByAutoId()
-        let values = ["text": inputTextField.text!, "name": "MJ"]
+        
+        // name can be changed, use uid
+        let toID = user!.id!
+        let fromID = FIRAuth.auth()?.currentUser?.uid
+        // For time
+        let date = NSDate()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM dd yyyy HH:mm:a"
+        dateFormatter.timeZone = NSTimeZone(name: "UTC") as TimeZone!
+        let timeStamp = dateFormatter.string(from: date as Date)
+        
+        let values = ["text": inputTextField.text!, "toID": toID, "FromID": fromID,
+                      "timeStamp": timeStamp]
         childRef.updateChildValues(values)
     
 //        print(inputTextField.text!)

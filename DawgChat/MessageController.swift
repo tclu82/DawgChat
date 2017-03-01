@@ -23,12 +23,70 @@ class MessageController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self,
                                                             action: #selector(newMessageHandler))
         checkIfUserLogin()
+        
+        observeMessages()
+    }
+    // A message array contains all messages
+    var messgaes = [Message]()
+    
+    /// Observe messages from Firebase DB
+    private func observeMessages()
+    {
+        let ref = FIRDatabase.database().reference().child("messages")
+        ref.observe(.childAdded, with: { (snapshot) in
+            
+//            print(snapshot)
+            
+            if let dictionary = snapshot.value as? [String: AnyObject]
+            {
+                let message = Message()
+                message.setValuesForKeys(dictionary)
+//                print(message.text!)
+//                print(message.fromID!)
+
+                self.messgaes.append(message)
+                
+                // Put into background thread, otherwise will crashed
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                
+            }
+        }, withCancel: nil)
+    }
+    
+    /// Use message count as row number
+    ///
+    /// - Parameters:
+    ///   - tableView: tableView description
+    ///   - section: section description
+    /// - Returns: return value description
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messgaes.count
+    }
+    
+    /// <#Description#>
+    ///
+    /// - Parameters:
+    ///   - tableView: <#tableView description#>
+    ///   - indexPath: <#indexPath description#>
+    /// - Returns: <#return value description#>
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
+        
+//        cell.textLabel?.text = "Awesome"
+        let message = messgaes[indexPath.row]
+        cell.textLabel?.text = message.toID
+        cell.detailTextLabel?.text = message.text
+        
+        return cell
     }
     
     /// Handle new message
     func newMessageHandler()
     {   // call NewMessageController for new message
         let newMessageController = NewMessageController()
+        newMessageController.messageController = self
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
@@ -127,15 +185,17 @@ class MessageController: UITableViewController {
         
         self.navigationItem.titleView = titleView
     
-        titleView
-            .addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                         action:#selector(showChatController)))
+//        titleView
+//            .addGestureRecognizer(UITapGestureRecognizer(target: self,
+//                                                         action:#selector(showChatController)))
     
     }
     
-    func showChatController()
+    /// Show the chat controller to start a new chat
+    func showChatControllerForUser(user: User)
     {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)
     }
     
