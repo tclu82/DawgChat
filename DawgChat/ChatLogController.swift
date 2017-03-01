@@ -103,7 +103,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         // For time
         let date = NSDate()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM dd yyyy HH:mm:a"
+        dateFormatter.dateFormat = "MMMM dd yyyy HH:mm:ss a"
         dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
         let timeStamp = dateFormatter.string(from: date as Date)
         

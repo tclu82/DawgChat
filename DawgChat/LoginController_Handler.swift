@@ -118,7 +118,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     ///   - values: values description
     private func registerUserIntoDatabaseWithUID(uid: String, values: [String: Any])
     {
-        let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
+//        let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
+        let ref = FIRDatabase.database().reference()
         
         // Create child node reference for each new account, assign user id in Firebase
         let userReference = ref.child("users").child(uid)

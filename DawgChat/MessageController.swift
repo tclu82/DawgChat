@@ -12,6 +12,8 @@ import Firebase
 /// This class shows message and has a logout UIBarButtonItem for logout
 class MessageController: UITableViewController {
     
+    var cellID = "cellID"
+    
     /// Call super init
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,10 +26,14 @@ class MessageController: UITableViewController {
                                                             action: #selector(newMessageHandler))
         checkIfUserLogin()
         
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellID)
+        
         observeMessages()
     }
     // A message array contains all messages
     var messgaes = [Message]()
+    // A dictionary mapping message and toID
+    var messageDictionary = [String: Message]()
     
     /// Observe messages from Firebase DB
     private func observeMessages()
@@ -44,10 +50,17 @@ class MessageController: UITableViewController {
 //                print(message.text!)
 //                print(message.fromID!)
 
-                self.messgaes.append(message)
+//                self.messgaes.append(message)
                 
+                if let toID = message.toID
+                {
+                    self.messageDictionary[toID] = message
+                    // Set dictionary values set to messages array
+                    self.messgaes = Array(self.messageDictionary.values)
+                }
+            
                 // Put into background thread, otherwise will crashed
-                DispatchQueue.main.async {
+                DispatchQueue.main.async{
                     self.tableView.reloadData()
                 }
                 
@@ -65,21 +78,56 @@ class MessageController: UITableViewController {
         return messgaes.count
     }
     
-    /// <#Description#>
+    /// Display message in each cell
+    ///
+    /// - Parameters:
+    ///   - tableView: tableView description
+    ///   - indexPath: indexPath description
+    /// - Returns: return value description
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
+        
+//        cell.textLabel?.text = "Awesome"
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! UserCell
+        
+        let message = messgaes[indexPath.row]
+        
+        cell.message = message
+        
+//        if let toID = message?.toID
+//        {   // Get message under user name
+//            let ref = FIRDatabase.database().reference().child("users").child(toID)
+//            ref.observe(.value, with: { (snapshot) in
+//                
+//                if let dictionary = snapshot.value as? [String: AnyObject]
+//                {   // Set name to cell's text label
+//                    cell.textLabel?.text = dictionary["name"] as? String
+//                    // Set profile image
+//                    if let profileImageUrl = dictionary["profileImageUrl"] as? String
+//                    {
+//                        cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
+//                    }
+//                }
+//                //                print(snapshot)
+//                
+//            }, withCancel: nil)
+//        }
+        
+        //        cell.textLabel?.text = message.toID
+        cell.detailTextLabel?.text = message.text
+        
+        return cell
+    }
+    
+    /// Change the Row height
     ///
     /// - Parameters:
     ///   - tableView: <#tableView description#>
     ///   - indexPath: <#indexPath description#>
     /// - Returns: <#return value description#>
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
-        
-//        cell.textLabel?.text = "Awesome"
-        let message = messgaes[indexPath.row]
-        cell.textLabel?.text = message.toID
-        cell.detailTextLabel?.text = message.text
-        
-        return cell
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 64
     }
     
     /// Handle new message
@@ -146,7 +194,6 @@ class MessageController: UITableViewController {
         let containerVeiw = UIView()
         containerVeiw.translatesAutoresizingMaskIntoConstraints = false
         titleView.addSubview(containerVeiw)
-        
         
         let profileImageView = UIImageView()
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
