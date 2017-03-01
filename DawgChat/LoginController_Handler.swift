@@ -86,7 +86,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             // Stores image inside "profile_images" with imageName (UUID)
             let storageRef = FIRStorage.storage().reference().child("profile_images")
                 .child("\(imageName).jpg")   // .jpg for UIImagePNGRepresentation // .png for UIImagePNGRepresentation
-            
+        
             // Use JPEG and set comppression quality to 0.1
             if let profileImage = self.profileImageView.image, let uploadData = UIImageJPEGRepresentation(profileImage, 0.1)
             {

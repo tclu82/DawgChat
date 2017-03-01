@@ -33,7 +33,8 @@ class NewMessageController: UITableViewController {
             
             if let dictionary = snapshot.value as? [String: Any] {
                 let user = User()
-        
+                // Use snapshot's key as user id (UUID)
+                user.id = snapshot.key
 //                user.setValuesForKeys(dictionary)
                 user.name = dictionary["name"] as! String?
                 user.email = dictionary["email"] as! String?
@@ -72,18 +73,17 @@ class NewMessageController: UITableViewController {
     ///   - tableView: <#tableView description#>
     ///   - indexPath: <#indexPath description#>
     /// - Returns: <#return value description#>
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId,
                                                  for: indexPath) as! UserCell
         let user = users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
-
+        
         // Use image from Firebase for user profile display
         if let profileImageUrl = user.profileImageUrl
         {
-            // Load image from Extensions.swift for cache handling
             cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
         }
         return cell
@@ -98,6 +98,20 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
     }
+
+    var messageController: MessageController?
+    
+    /// Dismiss for new chat
+    ///
+    /// - Parameters:
+    ///   - tableView: tableView description
+    ///   - indexPath: indexPath description
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true) {
+            let user = self.users[indexPath.row]
+            self.messageController?.showChatControllerForUser(user: user)
+        }
+    }
 }
 
 /// Inner class for UITableViewCell for User
@@ -108,7 +122,6 @@ class UserCell: UITableViewCell {
     // A property for customize profile image view
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.image = UIImage(named: "cat")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         // Radius = height / 2
         imageView.layer.cornerRadius = 25
@@ -116,7 +129,6 @@ class UserCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-    
     
     /// This func set profileImageView anchors
     ///

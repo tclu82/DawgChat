@@ -12,6 +12,7 @@ import Firebase
 /// This class handles login
 class LoginController: UIViewController {
     
+    /// For message display
     var messageController: MessageController?
     
     // An input container for user credential
@@ -76,6 +77,7 @@ class LoginController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         })
     }
+    
         
     // Textfields for user name input
     let nameTextField: UITextField = {
@@ -193,6 +195,7 @@ class LoginController: UIViewController {
         setupLoginRegisterButton()
         setupProfileImageView()
         setupLoginRegisterSegmentedControl()
+        
     }
     
     /// Status bar style
