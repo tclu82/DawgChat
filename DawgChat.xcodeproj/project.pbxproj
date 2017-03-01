@@ -21,6 +21,7 @@
 		118F2CFC1E63BC2C004D06A7 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118F2CFB1E63BC2C004D06A7 /* NewMessageController.swift */; };
 		118F2CFF1E63CBDD004D06A7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118F2CFE1E63CBDD004D06A7 /* User.swift */; };
 		11E604D61E66813C0071CE38 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E604D51E66813C0071CE38 /* UserCell.swift */; };
+		11E604D81E6754350071CE38 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E604D71E6754350071CE38 /* ChatMessageCell.swift */; };
 		CBF611581469B61A950CC46A /* Pods_DawgChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DEA971CC7126E46D79B59AA /* Pods_DawgChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		118F2CFB1E63BC2C004D06A7 /* NewMessageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		118F2CFE1E63CBDD004D06A7 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		11E604D51E66813C0071CE38 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		11E604D71E6754350071CE38 /* ChatMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		4DEA971CC7126E46D79B59AA /* Pods_DawgChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DawgChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E5D13148407FD6F8B4A924E /* Pods-DawgChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DawgChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-DawgChat/Pods-DawgChat.release.xcconfig"; sourceTree = "<group>"; };
 		CF42E94C18E97B560460EE9E /* Pods-DawgChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DawgChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DawgChat/Pods-DawgChat.debug.xcconfig"; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				11E604D51E66813C0071CE38 /* UserCell.swift */,
+				11E604D71E6754350071CE38 /* ChatMessageCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 				1128D1381E6214B500B4EE29 /* MessageController.swift in Sources */,
 				1128D1491E62175F00B4EE29 /* LoginController.swift in Sources */,
 				118F2CFF1E63CBDD004D06A7 /* User.swift in Sources */,
+				11E604D81E6754350071CE38 /* ChatMessageCell.swift in Sources */,
 				1128D1361E6214B500B4EE29 /* AppDelegate.swift in Sources */,
 				11E604D61E66813C0071CE38 /* UserCell.swift in Sources */,
 				112D73191E64CBE500DC3F70 /* Extensions.swift in Sources */,

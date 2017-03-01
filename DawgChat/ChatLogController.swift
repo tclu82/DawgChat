@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ChatLogController: UICollectionViewController, UITextFieldDelegate {
+class ChatLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout {
     
     // Create text field for input message
     lazy var inputTextField: UITextField = {
@@ -23,24 +23,97 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
     
     /// Chat with this user, and set its name to Navigation tile
     var user: User? {
-        didSet { navigationItem.title = user?.name }
+        didSet {
+            navigationItem.title = user?.name
+        
+            observeMessages()
+        }
+    }
+    // An array of messages
+    var messages = [Message]()
+    
+    /// Get messges from current user
+    func observeMessages()
+    {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else { return }
+        let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(uid)
+        
+        // Fetch info from user-messages, all children are messages of the current user
+        userMessagesRef.observeSingleEvent(of: .childAdded, with: { (snapshot) in
+            // print(snapshot)
+            
+            let messageID = snapshot.key
+            let messagesRef = FIRDatabase.database().reference().child("messages").child(messageID)
+            
+            // From user-messages, fetch each message
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                // print(snapshot)
+                
+                guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+                let message = Message()
+                // Crash if keys don't match
+                message.setValuesForKeys(dictionary)
+                // Check if message belongs to current user
+                if message.chatParterID() == self.user?.id
+                {
+                    self.messages.append(message)
+                    // Do it in threads
+                    DispatchQueue.main.async {
+                        self.collectionView?.reloadData()
+                    }
+                }
+                
+                // print(message.text)
+                
+            }, withCancel: nil)
+            
+        }, withCancel: nil)
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
 //        navigationItem.title = "Chat log"
+        
+        // Vertical drawable
+        collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
+        collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellID)
+        
         setupInputComponents()
     }
 
+    let cellID = "cellID"
     
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID,
+                                                      for: indexPath) as! ChatMessageCell
+//        cell.backgroundColor = UIColor.blue
+        
+        // Fetch messges then show them
+        let message = messages[indexPath.item]
+        cell.textView.text = message.text
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 80)
+    }
+    
+    /// Helper func to set up componenets for chat controller
     private func setupInputComponents()
     {
         let containerView = UIView()
 //        containerView.backgroundColor = UIColor.red
+        containerView.backgroundColor = UIColor.white
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        
+    
         view.addSubview(containerView)
         
         // Add x, y, width and height constraint anchors
@@ -98,7 +171,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         let childRef = ref.childByAutoId()
         
         // name can be changed, use uid
-        let toID = user!.id!
+        let toID = user?.id!
         let fromID = FIRAuth.auth()?.currentUser?.uid
         // For time
         let date = NSDate()
@@ -126,7 +199,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
             
             // Put messages under assigned user
             let recipientUserMessageRef = FIRDatabase.database().reference()
-                .child("user-messages").child(toID)
+                .child("user-messages").child(toID!)
             recipientUserMessageRef.updateChildValues([messageID: 1])
             
         }
