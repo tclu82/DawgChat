@@ -109,7 +109,30 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         
         let values = ["text": inputTextField.text!, "toID": toID, "FromID": fromID,
                       "timeStamp": timeStamp]
-        childRef.updateChildValues(values)
+//        childRef.updateChildValues(values)
+        
+        childRef.updateChildValues(values) { (err, ref) in
+            if err != nil
+            {
+                print(err!)
+                return
+            }
+            // Save messages according to user id
+            let userMessageRef = FIRDatabase.database().reference()
+                .child("user-messages").child(fromID!)
+            
+            let messageID = childRef.key
+            userMessageRef.updateChildValues([messageID: 1])
+            
+            // Put messages under assigned user
+            let recipientUserMessageRef = FIRDatabase.database().reference()
+                .child("user-messages").child(toID)
+            recipientUserMessageRef.updateChildValues([messageID: 1])
+            
+        }
+        
+        
+        
     
 //        print(inputTextField.text!)
     }

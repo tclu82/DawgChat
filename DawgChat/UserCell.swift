@@ -30,24 +30,8 @@ class UserCell: UITableViewCell {
     var message: Message? {
         didSet
         {
-            if let toID = message?.toID
-            {   // Get message under user name
-                let ref = FIRDatabase.database().reference().child("users").child(toID)
-                ref.observe(.value, with: { (snapshot) in
-                    
-                    if let dictionary = snapshot.value as? [String: AnyObject]
-                    {   // Set name to cell's text label
-                        self.textLabel?.text = dictionary["name"] as? String
-                        // Set profile image
-                        if let profileImageUrl = dictionary["profileImageUrl"] as? String
-                        {
-                            self.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
-                        }
-                    }
-                    //                print(snapshot)
-                    
-                }, withCancel: nil)
-            }
+            
+            setupNameAndProfileImage()
             
             //        cell.textLabel?.text = message.toID
             self.detailTextLabel?.text = message?.text
@@ -73,6 +57,36 @@ class UserCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    
+    /// Helper func
+    private func setupNameAndProfileImage()
+    {
+        let chatPartnerID: String?
+        
+        chatPartnerID =  message?.fromID == FIRAuth.auth()?.currentUser?.uid ? message?.toID
+            : message?.fromID
+        
+        
+        if let ID = chatPartnerID
+        {   // Get message under user name
+            let ref = FIRDatabase.database().reference().child("users").child(ID)
+            ref.observe(.value, with: { (snapshot) in
+                
+                if let dictionary = snapshot.value as? [String: AnyObject]
+                {   // Set name to cell's text label
+                    self.textLabel?.text = dictionary["name"] as? String
+                    // Set profile image
+                    if let profileImageUrl = dictionary["profileImageUrl"] as? String
+                    {
+                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
+                    }
+                }
+                //                print(snapshot)
+                
+            }, withCancel: nil)
+        }
+    }
     
     
     /// This func set profileImageView anchors

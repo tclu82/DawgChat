@@ -18,22 +18,77 @@ class MessageController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Logout button upper left
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self,
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain,
+                                                           target: self,
                                                            action: #selector(logoutHandler))
         
         let image = UIImage(named: "new_message")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain,
+                                                            target: self,
                                                             action: #selector(newMessageHandler))
         checkIfUserLogin()
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellID)
         
-        observeMessages()
+//        observeMessages()
+        
+//        observeUserMessages()
+    
     }
+    
     // A message array contains all messages
     var messgaes = [Message]()
     // A dictionary mapping message and toID
     var messageDictionary = [String: Message]()
+    
+    
+    /// Obserseve messages accrording user
+    private func observeUserMessages()
+    {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        let ref = FIRDatabase.database().reference().child("user-messages").child(uid)
+        ref.observe(.childAdded, with: { (snapshot) in
+//            print(snapshot)
+            
+            let messageID = snapshot.key
+            let messageRef = FIRDatabase.database().reference().child("messages").child(messageID)
+            
+            messageRef.observe(.value, with: { (snapshot) in
+//                print(snapshot)
+                
+                if let dictionary = snapshot.value as? [String: AnyObject]
+                {
+                    let message = Message()
+                    message.setValuesForKeys(dictionary)
+                    //                print(message.text!)
+                    //                print(message.fromID!)
+                    
+                    //                self.messgaes.append(message)
+                    
+                    if let toID = message.toID
+                    {
+                        self.messageDictionary[toID] = message
+                        // Set dictionary values set to messages array
+                        self.messgaes = Array(self.messageDictionary.values)
+                    }
+                    
+                    // Put into background thread, otherwise will crashed
+                    DispatchQueue.main.async{
+                        self.tableView.reloadData()
+                    }
+                    
+                }
+                
+            }, withCancel: nil)
+            
+            
+        }, withCancel: nil)
+    }
+    
+    
+    
     
     /// Observe messages from Firebase DB
     private func observeMessages()
@@ -123,9 +178,9 @@ class MessageController: UITableViewController {
     /// Change the Row height
     ///
     /// - Parameters:
-    ///   - tableView: <#tableView description#>
-    ///   - indexPath: <#indexPath description#>
-    /// - Returns: <#return value description#>
+    ///   - tableView: tableView description
+    ///   - indexPath: indexPath description
+    /// - Returns: return value description
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
     }
@@ -187,6 +242,14 @@ class MessageController: UITableViewController {
     /// - Parameter user: user description
     func setupNavBarWithUser(user: User)
     {
+        // Whenever login, remove all messages
+        messgaes.removeAll()
+        messageDictionary.removeAll()
+        tableView.reloadData()
+        
+        // Load messages according login user
+        observeUserMessages()
+        
         let titleView = UIView()
         titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
 //        titleView.backgroundColor = UIColor.red
