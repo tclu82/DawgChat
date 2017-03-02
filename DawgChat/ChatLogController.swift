@@ -93,11 +93,41 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         // Fetch messges then show them
         let message = messages[indexPath.item]
         cell.textView.text = message.text
+
+        setupCell(cell: cell, message: message)
         
         // Modify bubbleView's width
         cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 30
-        
         return cell
+    }
+    
+    private func setupCell(cell: ChatMessageCell, message: Message)
+    {   // Set up profile image inside chat log
+        if let profileImageUrl = self.user?.profileImageUrl
+        {
+            cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
+        }
+        
+        // user message
+        if message.fromID == FIRAuth.auth()?.currentUser?.uid
+        {
+            cell.bubbleView.backgroundColor = ChatMessageCell.midPurpleColor
+            cell.textView.textColor = UIColor.white
+            cell.profileImageView.isHidden = true
+            
+            cell.bubbleViewRightAnchor?.isActive = true
+            cell.bubbleViewLeftAnchor?.isActive = false
+        }
+        // partner message
+        else
+        {
+            cell.bubbleView.backgroundColor = ChatMessageCell.goldColor
+            cell.textView.textColor = UIColor.black
+            cell.profileImageView.isHidden = false
+            
+            cell.bubbleViewRightAnchor?.isActive = false
+            cell.bubbleViewLeftAnchor?.isActive = true
+        }
     }
     
     /// Handle rotation resize

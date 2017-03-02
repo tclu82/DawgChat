@@ -41,6 +41,8 @@ class MessageController: UITableViewController {
     // A dictionary mapping message and toID
     var messageDictionary = [String: Message]()
     
+    // For reload to solve worng image loaded
+    var timer: Timer?
     
     /// Obserseve messages accrording user
     private func observeUserMessages()
@@ -74,20 +76,29 @@ class MessageController: UITableViewController {
                         self.messgaes = Array(self.messageDictionary.values)
                     }
                     
-                    // Put into background thread, otherwise will crashed
-                    DispatchQueue.main.async{
-                        self.tableView.reloadData()
-                    }
+                    // Invalid all the timer, only the last one is valid
+                    self.timer?.invalidate()
+                    print("cancel timer")
                     
+                    // After 0.1 sec, table reload
+                    self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self,
+                                         selector: #selector(self.handleReloadTable),
+                                         userInfo: nil, repeats: false)
+                    print("scheduled table reload in 0.1 sec")
                 }
-                
             }, withCancel: nil)
-            
-            
         }, withCancel: nil)
     }
     
-    
+    /// Helper func to reload image
+    func handleReloadTable()
+    {
+        // Put into background thread, otherwise will crashed
+        DispatchQueue.main.async{
+             print("table reloaded")
+            self.tableView.reloadData()
+        }
+    }
     
     
     /// Observe messages from Firebase DB
