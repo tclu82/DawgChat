@@ -101,9 +101,9 @@ class MessageController: UITableViewController {
                 let message = Message()
                 message.setValuesForKeys(dictionary)
                 
-                if let toID = message.toID
+                if let chatParterID = message.chatParterID()
                 {
-                    self.messageDictionary[toID] = message
+                    self.messageDictionary[chatParterID] = message
                     // Set dictionary values set to messages array
                     self.messgaes = Array(self.messageDictionary.values)
                 }

@@ -68,10 +68,15 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 10 pixels from top, 60 from bottom
+        collectionView?.contentInset = UIEdgeInsetsMake(10, 0, 60, 0)
+        // Chane the scroll indicator as well (top can be 0)
+        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0)
 
         // Vertical drawable
         collectionView?.alwaysBounceVertical = true
-        collectionView?.backgroundColor = UIColor.white
+        collectionView?.backgroundColor = UIColor.black
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellID)
         setupInputComponents()
     }
@@ -88,12 +93,52 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         // Fetch messges then show them
         let message = messages[indexPath.item]
         cell.textView.text = message.text
+        
+        // Modify bubbleView's width
+        cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 30
+        
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 80)
+    /// Handle rotation resize
+    ///
+    /// - Parameters:
+    ///   - size: size description
+    ///   - coordinator: coordinator description
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        collectionView?.collectionViewLayout.invalidateLayout()
     }
+    
+    /// Return the height of textField
+    ///
+    /// - Parameters:
+    ///   - collectionView: collectionView description
+    ///   - collectionViewLayout: collectionViewLayout description
+    ///   - indexPath: indexPath description
+    /// - Returns: return value description
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        var height:CGFloat = 80
+        
+        if let text = messages[indexPath.item].text
+        {
+            height = estimateFrameForText(text: text).height + 20
+        }
+        
+        
+        return CGSize(width: view.frame.width, height: height)
+    }
+    
+    private func estimateFrameForText(text: String) -> CGRect
+    {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size, options: options,
+                                                   attributes: [NSFontAttributeName:
+                                                    UIFont.systemFont(ofSize: 16)],
+                                                   context: nil)
+    }
+    
     
     /// Helper func to set up componenets for chat controller
     private func setupInputComponents()
@@ -168,7 +213,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         dateFormatter.dateFormat = "MMMM dd yyyy HH:mm:ss a"
         dateFormatter.timeZone = NSTimeZone(name: "PST") as TimeZone!
         let timeStamp = dateFormatter.string(from: date as Date)
-        
         let values = ["text": inputTextField.text!, "toID": toID, "FromID": fromID,
                       "timeStamp": timeStamp]
 //        childRef.updateChildValues(values)
@@ -179,6 +223,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
                 print(err!)
                 return
             }
+            // Remove text after input
+            self.inputTextField.text = nil
+            
             // Save messages according to user id
             let userMessageRef = FIRDatabase.database().reference()
                 .child("user-messages").child(fromID!)
