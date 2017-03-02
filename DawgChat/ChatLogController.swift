@@ -66,6 +66,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         }, withCancel: nil)
     }
     
+    let cellID = "cellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -79,9 +81,31 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         collectionView?.backgroundColor = UIColor.black
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellID)
         setupInputComponents()
+        setupKeyboardObservers()
     }
 
-    let cellID = "cellId"
+    /// Observe keyboard scrolling
+    private func setupKeyboardObservers()
+    {   // Keyboard up
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        // Keyboard down
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    func handleKeyboardWillShow(notification: NSNotification)
+    {
+//        print(notification.userInfo!)
+        let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?
+            .cgRectValue
+//        print(keyboardFrame?.height)
+        // Move input area above keyboard
+        containerViewBottomAnchor?.constant = -(keyboardFrame!.height)
+    }
+    
+    func handleKeyboardWillHide(notification: NSNotification)
+    {
+        containerViewBottomAnchor?.constant = 0
+    }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
@@ -170,6 +194,8 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     
+    var containerViewBottomAnchor: NSLayoutConstraint?
+    
     /// Helper func to set up componenets for chat controller
     private func setupInputComponents()
     {
@@ -182,7 +208,11 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         
         // Add x, y, width and height constraint anchors
         containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        containerViewBottomAnchor = containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        containerViewBottomAnchor?.isActive = true
+        
+        
         containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
