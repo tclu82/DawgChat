@@ -25,7 +25,6 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var user: User? {
         didSet {
             navigationItem.title = user?.name
-        
             observeMessages()
         }
     }
@@ -33,58 +32,51 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     var messages = [Message]()
     
     /// Get messges from current user
-    func observeMessages()
+    private func observeMessages()
     {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else { return }
-        let userMessagesRef = FIRDatabase.database().reference().child("user-messages").child(uid)
+        let userMessagesRef = FIRDatabase.database().reference()
+            .child("user-messages").child(uid)
         
-        // Fetch info from user-messages, all children are messages of the current user
-        userMessagesRef.observeSingleEvent(of: .childAdded, with: { (snapshot) in
-            // print(snapshot)
-            
+        // Fetch info from user-messages, observe all children are messages of the current user
+        userMessagesRef.observe(.childAdded, with: { (snapshot) in
+//            print(snapshot)
             let messageID = snapshot.key
             let messagesRef = FIRDatabase.database().reference().child("messages").child(messageID)
             
-            // From user-messages, fetch each message
+            // From user-messages, fetch single message
             messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                // print(snapshot)
+//                 print(snapshot)
                 
                 guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
                 let message = Message()
                 // Crash if keys don't match
                 message.setValuesForKeys(dictionary)
+                
                 // Check if message belongs to current user
                 if message.chatParterID() == self.user?.id
                 {
                     self.messages.append(message)
-                    // Do it in threads
+                    // Do it in background threads
                     DispatchQueue.main.async {
                         self.collectionView?.reloadData()
                     }
                 }
-                
-                // print(message.text)
-                
             }, withCancel: nil)
-            
         }, withCancel: nil)
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        navigationItem.title = "Chat log"
-        
+
         // Vertical drawable
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellID)
-        
         setupInputComponents()
     }
 
-    let cellID = "cellID"
+    let cellID = "cellId"
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
@@ -93,12 +85,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID,
                                                       for: indexPath) as! ChatMessageCell
-//        cell.backgroundColor = UIColor.blue
-        
         // Fetch messges then show them
         let message = messages[indexPath.item]
         cell.textView.text = message.text
-        
         return cell
     }
     
@@ -171,7 +160,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let childRef = ref.childByAutoId()
         
         // name can be changed, use uid
-        let toID = user?.id!
+        let toID = user!.id!
         let fromID = FIRAuth.auth()?.currentUser?.uid
         // For time
         let date = NSDate()
@@ -199,7 +188,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
             
             // Put messages under assigned user
             let recipientUserMessageRef = FIRDatabase.database().reference()
-                .child("user-messages").child(toID!)
+                .child("user-messages").child(toID)
             recipientUserMessageRef.updateChildValues([messageID: 1])
             
         }

@@ -96,16 +96,10 @@ class MessageController: UITableViewController {
         let ref = FIRDatabase.database().reference().child("messages")
         ref.observe(.childAdded, with: { (snapshot) in
             
-//            print(snapshot)
-            
             if let dictionary = snapshot.value as? [String: AnyObject]
             {
                 let message = Message()
                 message.setValuesForKeys(dictionary)
-//                print(message.text!)
-//                print(message.fromID!)
-
-//                self.messgaes.append(message)
                 
                 if let toID = message.toID
                 {
@@ -118,7 +112,6 @@ class MessageController: UITableViewController {
                 DispatchQueue.main.async{
                     self.tableView.reloadData()
                 }
-                
             }
         }, withCancel: nil)
     }
@@ -140,38 +133,12 @@ class MessageController: UITableViewController {
     ///   - indexPath: indexPath description
     /// - Returns: return value description
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
         
-//        cell.textLabel?.text = "Awesome"
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! UserCell
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID,
+                                                 for: indexPath) as! UserCell
         let message = messgaes[indexPath.row]
-        
         cell.message = message
-        
-//        if let toID = message?.toID
-//        {   // Get message under user name
-//            let ref = FIRDatabase.database().reference().child("users").child(toID)
-//            ref.observe(.value, with: { (snapshot) in
-//                
-//                if let dictionary = snapshot.value as? [String: AnyObject]
-//                {   // Set name to cell's text label
-//                    cell.textLabel?.text = dictionary["name"] as? String
-//                    // Set profile image
-//                    if let profileImageUrl = dictionary["profileImageUrl"] as? String
-//                    {
-//                        cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
-//                    }
-//                }
-//                //                print(snapshot)
-//                
-//            }, withCancel: nil)
-//        }
-        
-        //        cell.textLabel?.text = message.toID
         cell.detailTextLabel?.text = message.text
-        
         return cell
     }
     
@@ -185,9 +152,10 @@ class MessageController: UITableViewController {
         return 64
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
         let message = messgaes[indexPath.row]
-//        print(message.text, message.fromID, message.toID)
+
         // Get partner id
         guard let chatPartnerID = message.chatParterID() else { return }
         let ref = FIRDatabase.database().reference().child("users").child(chatPartnerID)
@@ -203,8 +171,6 @@ class MessageController: UITableViewController {
             self.showChatControllerForUser(user: user)
             
         }, withCancel: nil)
-        
-        
     }
     
     /// Handle new message

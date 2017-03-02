@@ -62,15 +62,9 @@ class UserCell: UITableViewCell {
     /// Helper func
     private func setupNameAndProfileImage()
     {
-//        let chatPartnerID: String?
-//        
-//        chatPartnerID =  message?.fromID == FIRAuth.auth()?.currentUser?.uid ? message?.toID
-//            : message?.fromID
-        
-        
-        if let ID = message?.chatParterID()
+        if let id = message?.chatParterID()
         {   // Get message under user name
-            let ref = FIRDatabase.database().reference().child("users").child(ID)
+            let ref = FIRDatabase.database().reference().child("users").child(id)
             ref.observe(.value, with: { (snapshot) in
                 
                 if let dictionary = snapshot.value as? [String: AnyObject]
