@@ -72,18 +72,78 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         super.viewDidLoad()
         
         // 10 pixels from top, 60 from bottom
-        collectionView?.contentInset = UIEdgeInsetsMake(10, 0, 60, 0)
+        collectionView?.contentInset = UIEdgeInsetsMake(10, 0, 10, 0)
         // Chane the scroll indicator as well (top can be 0)
-        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0)
+//        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0)
 
         // Vertical drawable
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.black
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellID)
+        
+        // Animate slide keyboard input popup
+        collectionView?.keyboardDismissMode = .interactive
+        
         setupInputComponents()
-        setupKeyboardObservers()
+//        setupKeyboardObservers()
     }
 
+    lazy var inputContainerView: UIView = {
+        let containerView = UIView()
+        containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
+        containerView.backgroundColor = UIColor.white
+        
+        
+        // Create Send button for message
+        let sendButton = UIButton(type: .system)  // for system interaction
+        sendButton.setTitle("Send", for: .normal)
+        sendButton.translatesAutoresizingMaskIntoConstraints = false
+        sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+        
+        containerView.addSubview(sendButton)
+        // Add x, y, width and height constraint anchors
+        sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+    
+        
+        containerView.addSubview(self.inputTextField)
+        // Add x, y, width and height constraint anchors
+        self.inputTextField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10)
+            .isActive = true // 10 pixels away from left anchor
+        self.inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
+        self.inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        
+        // Create a separator for input text and users
+        let separatorLineView = UIView()
+        separatorLineView.backgroundColor = UIColor(r: 220, g: 220, b: 220)
+        separatorLineView.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(separatorLineView)
+        // Add x, y, width and height constraint anchors
+        separatorLineView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+        separatorLineView.topAnchor.constraint(equalTo: self.inputTextField.topAnchor).isActive = true
+        separatorLineView.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
+        separatorLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+
+        
+        return containerView
+    }()
+    
+    /// For slide up keyboard animaiton
+    override var inputAccessoryView: UIView? {
+        get { return inputContainerView }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    
+    
+    
     /// Observe keyboard scrolling
     private func setupKeyboardObservers()
     {   // Keyboard up
@@ -92,19 +152,43 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: .UIKeyboardWillHide, object: nil)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // Solve the memory leak caused by keyboard up and down
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func handleKeyboardWillShow(notification: NSNotification)
     {
 //        print(notification.userInfo!)
         let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?
             .cgRectValue
+        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval
+        
 //        print(keyboardFrame?.height)
         // Move input area above keyboard
         containerViewBottomAnchor?.constant = -(keyboardFrame!.height)
+        
+        // Animate the keyboard popup
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
+        
     }
     
     func handleKeyboardWillHide(notification: NSNotification)
     {
+        let keyboardDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval
+        
+        //        print(keyboardFrame?.height)
+        // Move input area above keyboard
         containerViewBottomAnchor?.constant = 0
+        
+        // Animate the keyboard popup
+        UIView.animate(withDuration: keyboardDuration!) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -178,9 +262,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         {
             height = estimateFrameForText(text: text).height + 20
         }
-        
-        
-        return CGSize(width: view.frame.width, height: height)
+        // Solve frame width after rotation
+        let width = UIScreen.main.bounds.width
+        return CGSize(width: width, height: height)
     }
     
     private func estimateFrameForText(text: String) -> CGRect
