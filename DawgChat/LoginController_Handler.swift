@@ -54,6 +54,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     ///
     /// - Parameter picker: <#picker description#>
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//        print("cancel")
         dismiss(animated: true, completion: nil)
     }
     
@@ -86,7 +87,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             // Stores image inside "profile_images" with imageName (UUID)
             let storageRef = FIRStorage.storage().reference().child("profile_images")
                 .child("\(imageName).jpg")   // .jpg for UIImagePNGRepresentation // .png for UIImagePNGRepresentation
-        
+            
+//            // Generate binary data from png (huge)
+//            if let uploadData = UIImagePNGRepresentation(self.profileImageView.image!) {
+            
             // Use JPEG and set comppression quality to 0.1
             if let profileImage = self.profileImageView.image, let uploadData = UIImageJPEGRepresentation(profileImage, 0.1)
             {
@@ -114,7 +118,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     ///   - values: values description
     private func registerUserIntoDatabaseWithUID(uid: String, values: [String: Any])
     {
-        let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
+//        let ref = FIRDatabase.database().reference(fromURL: "https://dawgchat.firebaseio.com/")
+        let ref = FIRDatabase.database().reference()
         
         // Create child node reference for each new account, assign user id in Firebase
         let userReference = ref.child("users").child(uid)
@@ -127,6 +132,9 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 return
             }
             print("User is saved to Firebase database successfully")
+            // Set title for current login user
+//            self.messageController?.fetchUserAndSetupNavBarTitle()
+//            self.messageController?.navigationItem.title = values["name"] as? String
             
             let user = User()
             // Will crash if keys don't match

@@ -12,22 +12,94 @@ import Firebase
 /// This class shows message and has a logout UIBarButtonItem for logout
 class MessageController: UITableViewController {
     
+    var cellID = "cellID"
+    
     /// Call super init
     override func viewDidLoad() {
         super.viewDidLoad()
         // Logout button upper left
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self,
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain,
+                                                           target: self,
                                                            action: #selector(logoutHandler))
         
         let image = UIImage(named: "new_message")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self,
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain,
+                                                            target: self,
                                                             action: #selector(newMessageHandler))
         checkIfUserLogin()
         
-        observeMessages()
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellID)
+        
+//        observeMessages()
+        
+//        observeUserMessages()
+    
     }
+    
     // A message array contains all messages
     var messgaes = [Message]()
+    // A dictionary mapping message and toID
+    var messageDictionary = [String: Message]()
+    
+    // For reload to solve worng image loaded
+    var timer: Timer?
+    
+    /// Obserseve messages accrording user
+    private func observeUserMessages()
+    {
+        guard let uid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        let ref = FIRDatabase.database().reference().child("user-messages").child(uid)
+        ref.observe(.childAdded, with: { (snapshot) in
+//            print(snapshot)
+            
+            let messageID = snapshot.key
+            let messageRef = FIRDatabase.database().reference().child("messages").child(messageID)
+            
+            messageRef.observe(.value, with: { (snapshot) in
+//                print(snapshot)
+                
+                if let dictionary = snapshot.value as? [String: AnyObject]
+                {
+                    let message = Message()
+                    message.setValuesForKeys(dictionary)
+                    //                print(message.text!)
+                    //                print(message.fromID!)
+                    
+                    //                self.messgaes.append(message)
+                    
+                    if let toID = message.toID
+                    {
+                        self.messageDictionary[toID] = message
+                        // Set dictionary values set to messages array
+                        self.messgaes = Array(self.messageDictionary.values)
+                    }
+                    
+                    // Invalid all the timer, only the last one is valid
+                    self.timer?.invalidate()
+                    print("cancel timer")
+                    
+                    // After 0.1 sec, table reload
+                    self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self,
+                                         selector: #selector(self.handleReloadTable),
+                                         userInfo: nil, repeats: false)
+                    print("scheduled table reload in 0.1 sec")
+                }
+            }, withCancel: nil)
+        }, withCancel: nil)
+    }
+    
+    /// Helper func to reload image
+    func handleReloadTable()
+    {
+        // Put into background thread, otherwise will crashed
+        DispatchQueue.main.async{
+             print("table reloaded")
+            self.tableView.reloadData()
+        }
+    }
+    
     
     /// Observe messages from Firebase DB
     private func observeMessages()
@@ -39,13 +111,18 @@ class MessageController: UITableViewController {
             {
                 let message = Message()
                 message.setValuesForKeys(dictionary)
-                self.messgaes.append(message)
                 
+                if let chatParterID = message.chatParterID()
+                {
+                    self.messageDictionary[chatParterID] = message
+                    // Set dictionary values set to messages array
+                    self.messgaes = Array(self.messageDictionary.values)
+                }
+            
                 // Put into background thread, otherwise will crashed
-                DispatchQueue.main.async {
+                DispatchQueue.main.async{
                     self.tableView.reloadData()
                 }
-                
             }
         }, withCancel: nil)
     }
@@ -60,19 +137,51 @@ class MessageController: UITableViewController {
         return messgaes.count
     }
     
-    /// Display Chat log
+    /// Display message in each cell
     ///
     /// - Parameters:
     ///   - tableView: tableView description
     ///   - indexPath: indexPath description
     /// - Returns: return value description
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID,
+                                                 for: indexPath) as! UserCell
         let message = messgaes[indexPath.row]
-        cell.textLabel?.text = message.toID
+        cell.message = message
         cell.detailTextLabel?.text = message.text
         return cell
+    }
+    
+    /// Change the Row height
+    ///
+    /// - Parameters:
+    ///   - tableView: tableView description
+    ///   - indexPath: indexPath description
+    /// - Returns: return value description
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 64
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        let message = messgaes[indexPath.row]
+
+        // Get partner id
+        guard let chatPartnerID = message.chatParterID() else { return }
+        let ref = FIRDatabase.database().reference().child("users").child(chatPartnerID)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+//            print(snapshot)
+            
+            // Parse JSON
+            guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+            let user = User()
+            user.id = chatPartnerID
+            user.setValuesForKeys(dictionary)
+            // When chat partner is selected, pop-up chat controller
+            self.showChatControllerForUser(user: user)
+            
+        }, withCancel: nil)
     }
     
     /// Handle new message
@@ -132,12 +241,21 @@ class MessageController: UITableViewController {
     /// - Parameter user: user description
     func setupNavBarWithUser(user: User)
     {
+        // Whenever login, remove all messages
+        messgaes.removeAll()
+        messageDictionary.removeAll()
+        tableView.reloadData()
+        
+        // Load messages according login user
+        observeUserMessages()
+        
         let titleView = UIView()
         titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+//        titleView.backgroundColor = UIColor.red
+        
         let containerVeiw = UIView()
         containerVeiw.translatesAutoresizingMaskIntoConstraints = false
         titleView.addSubview(containerVeiw)
-        
         
         let profileImageView = UIImageView()
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -175,6 +293,11 @@ class MessageController: UITableViewController {
         containerVeiw.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         
         self.navigationItem.titleView = titleView
+    
+//        titleView
+//            .addGestureRecognizer(UITapGestureRecognizer(target: self,
+//                                                         action:#selector(showChatController)))
+    
     }
     
     /// Show the chat controller to start a new chat

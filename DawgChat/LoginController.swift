@@ -12,7 +12,6 @@ import Firebase
 /// This class handles login
 class LoginController: UIViewController {
     
-    /// For message display
     var messageController: MessageController?
     
     // An input container for user credential

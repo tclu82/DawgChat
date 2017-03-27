@@ -7,12 +7,20 @@
 //
 
 import UIKit
+import Firebase
 
-/// A class to contain message info
 class Message: NSObject {
 
     var fromID: String?
     var toID: String?
     var text: String?
     var timeStamp: String?
+    
+    /// Check message determine the chat partner
+    ///
+    /// - Returns: Partner ID
+    func chatParterID() -> String?
+    {
+        return fromID == FIRAuth.auth()?.currentUser?.uid ? toID : fromID
+    }
 }
