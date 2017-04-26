@@ -30,7 +30,7 @@ extension UIImageView {
 
         // Not in the cache, download from Firebase DB
         let url = NSURL(string: urlString)
-        URLSession.shared.dataTask(with: url as! URL, completionHandler: { (data, response, err) in
+        URLSession.shared.dataTask(with: url! as URL, completionHandler: { (data, response, err) in
             
             // Download failed!
             if err != nil
